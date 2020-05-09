@@ -5,6 +5,8 @@ import { StatusBar, View, StyleSheet } from 'react-native';
 import Routes from './routes';
 import { NavigationContainer } from '@react-navigation/native';
 
+import AppProvider from './hooks';
+
 declare const global: { HermesInternal: null | {} };
 
 const App = () => {
@@ -14,9 +16,11 @@ const App = () => {
         barStyle="light-content"
         backgroundColor={styles.container.backgroundColor}
       />
-      <View style={styles.container}>
-        <Routes />
-      </View>
+      <AppProvider>
+        <View style={styles.container}>
+          <Routes />
+        </View>
+      </AppProvider>
     </NavigationContainer>
   );
 };
