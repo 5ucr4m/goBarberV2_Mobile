@@ -8,6 +8,13 @@ import React, {
 import AsyncStorage from '@react-native-community/async-storage';
 import api from '../services/api';
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  avatar_url: string;
+}
+
 export interface SignInCredentials {
   email: string;
   password: string;
@@ -15,11 +22,11 @@ export interface SignInCredentials {
 
 interface AuthState {
   token: string;
-  user: object;
+  user: User;
 }
 
 interface AuthContextData {
-  user: object;
+  user: User;
   loading: boolean;
   signin(credentials: SignInCredentials): Promise<void>;
   signout(): void;
@@ -35,6 +42,10 @@ export const AuthProvider: React.FC = ({ children }) => {
     async function loadStorageData(): Promise<void> {
       const token = await AsyncStorage.getItem('@goBarber:token');
       const user = await AsyncStorage.getItem('@goBarber:user');
+
+      if (token) {
+        api.defaults.headers.authorization = `Bearer ${token}`;
+      }
 
       token && user
         ? setData({ token, user: JSON.parse(user) })
@@ -57,6 +68,8 @@ export const AuthProvider: React.FC = ({ children }) => {
       ['@goBarber:token', token],
       ['@goBarber:user', JSON.stringify(user)],
     ]);
+
+    api.defaults.headers.authorization = `Bearer ${token}`;
 
     setData({ token, user });
   }, []);
