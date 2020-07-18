@@ -14,6 +14,7 @@ const App = () => {
     <NavigationContainer>
       <StatusBar
         barStyle="light-content"
+        translucent
         backgroundColor={styles.container.backgroundColor}
       />
       <AppProvider>

@@ -30,23 +30,22 @@ export interface Provider {
 
 const Dashboard: React.FC = () => {
   const [providers, setProviders] = useState<Provider[]>([]);
-  const { signout, user } = useAuth();
+  const { user } = useAuth();
   const { navigate } = useNavigation();
 
   useEffect(() => {
-    api.get<Provider[]>('/providers').then(response => {
+    api.get('/providers').then(response => {
       setProviders(response.data);
     });
   }, []);
 
   const navigateToProfile = useCallback(() => {
-    // navigate('Profile');
-    signout();
+    navigate('Profile');
   }, [navigate]);
 
   const navigateToCreateAppointment = useCallback(
     (provider: Provider) => {
-      navigate('CreateAppointment', provider);
+      navigate('CreateAppointment', { providerID: provider.id });
     },
     [navigate],
   );
@@ -74,9 +73,7 @@ const Dashboard: React.FC = () => {
           >
             <ProviderAvatar
               source={{
-                uri:
-                  provider.avatar_url ||
-                  'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png',
+                uri: provider.avatar_url,
               }}
             />
             <ProviderInfo>
